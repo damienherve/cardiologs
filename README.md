@@ -2,6 +2,16 @@
 
 This project is my answer to the Cardiolog's Technical Test
 
+## Preview
+
+<p align="center" >
+  <kbd>
+    <img src="images/apercu.gif" title="Cardiologs Demo" float="left">
+  </kbd>
+  <br>
+  <em>Cardiologs Technical Test</em>
+</p>
+
 ## Installation
 
 To start the project, run
@@ -84,3 +94,5 @@ I made this project in approximatly 5 hours divided like:
 - 2h: Components creation
 - 1h: Filtering system
 - 1h: Bug fix and style optimization (still pretty ugly !)
+
+Unfortunatly, i can't spend much time on this project, so the tests are missing (sorry for that).
