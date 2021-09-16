@@ -8,11 +8,10 @@
  * @format
  */
 
-import {CardsApi} from '@api';
+import {Card, CardsApi, Status} from '@api';
 import {CardListItem, Layout, SearchInput, StatusFilter} from '@components';
 import React, {useEffect, useState} from 'react';
 import {FlatList, ListRenderItem} from 'react-native';
-import {Card, Status} from 'src/api/types';
 import styled from 'styled-components/native';
 
 const CardList = styled(FlatList as new () => FlatList<Card>)``;
@@ -37,7 +36,7 @@ const App: React.FC = () => {
           } as Card)
         : card,
     );
-    setCards(updatedCards);
+    setCards(orderCardsByStatus(updatedCards));
   };
 
   const renderCard: ListRenderItem<Card> = ({item}) => {
@@ -46,26 +45,48 @@ const App: React.FC = () => {
 
   useEffect(() => {
     CardsApi.getCards().then(response => {
-      setCards(response.data);
-      setFilteredCards(response.data);
+      // Reordering cards by status
+      // (top) PENDING -> REJECTED -> DONE (bottom)
+      const orderedCards = orderCardsByStatus(response.data);
+      setCards(orderedCards);
+      setFilteredCards(orderedCards);
     });
   }, []);
 
+  const orderCardsByStatus = (array: Array<Card>) => {
+    return array.sort((a, b) => {
+      const statusToOrder = (s: Status) => {
+        switch (s) {
+          case 'PENDING':
+            return 0;
+          case 'REJECTED':
+            return 1;
+          case 'DONE':
+            return 2;
+        }
+      };
+      return statusToOrder(a.status) - statusToOrder(b.status);
+    });
+  };
+
   useEffect(() => {
-    // Filtering
+    // Filtering change effect
     var filtered = cards;
 
     if (activeStatusFilter) {
+      //
       const statusFilter = (card: Card) => card.status === activeStatusFilter;
       filtered = filtered.filter(statusFilter);
     }
 
     if (searchFilter) {
       const lcSearch = searchFilter.toLowerCase();
+      // Filtering by patient name or arrythmia
       filtered = filtered.filter(
         card =>
           card.patient_name.toLowerCase().includes(lcSearch) ||
-          card.arrhythmias.includes(lcSearch),
+          card.arrhythmias.filter(arr => arr.toLowerCase().includes(lcSearch))
+            .length >= 1,
       );
     }
 
@@ -75,7 +96,10 @@ const App: React.FC = () => {
   return (
     <Layout>
       <SearchInput onChangeText={text => setSearchFilter(text)} />
-      <StatusFilter onFilterChange={status => setActiveStatusFilter(status)} />
+      <StatusFilter
+        defaultActiveFilter="PENDING"
+        onFilterChange={status => setActiveStatusFilter(status)}
+      />
       <CardList data={filteredCards} renderItem={renderCard} />
     </Layout>
   );

@@ -1,6 +1,6 @@
+import {Status} from '@api';
 import React from 'react';
 import {PressableProps} from 'react-native';
-import {Status} from 'src/api/types';
 import styled from 'styled-components/native';
 
 const ButtonContainer = styled.Pressable<ButtonTextProps>`
@@ -11,11 +11,11 @@ const ButtonContainer = styled.Pressable<ButtonTextProps>`
 `;
 
 interface ButtonTextProps {
-  readonly selected: boolean;
-  status: Status;
+  selected?: boolean;
+  status?: Status;
 }
 
-const getBackgroundColor = (status: Status) => {
+const getBackgroundColor = (status?: Status) => {
   switch (status) {
     case 'DONE':
       return '#8F8';
@@ -23,6 +23,8 @@ const getBackgroundColor = (status: Status) => {
       return '#F88';
     case 'PENDING':
       return '#FF8';
+    default:
+      return 'white';
   }
 };
 
@@ -30,6 +32,7 @@ const ButtonText = styled.Text<ButtonTextProps>`
   background-color: ${({status}) => getBackgroundColor(status)};
   padding: 10px;
   overflow: hidden;
+  text-align: center;
 `;
 
 interface ButtonProps extends PressableProps, ButtonTextProps {}

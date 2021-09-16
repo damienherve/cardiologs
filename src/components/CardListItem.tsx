@@ -1,8 +1,9 @@
+import {Card, Status} from '@api';
+import {Button} from '@components';
 import React from 'react';
-import {Card, Status} from 'src/api/types';
 import styled from 'styled-components/native';
 
-const getBackgroundColor = (status: Status) => {
+const getBorderColor = (status: Status) => {
   switch (status) {
     case 'DONE':
       return '#8F8';
@@ -13,23 +14,18 @@ const getBackgroundColor = (status: Status) => {
   }
 };
 
-const CardContainer = styled.Pressable<{status: Status}>`
-  background-color: ${props => getBackgroundColor(props.status)};
+const CardContainer = styled.View<{status: Status}>`
+  background-color: #cde4f1;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   border-radius: 10px;
   border-width: 3px;
-  border-color: lightgray;
+  border-color: ${props => getBorderColor(props.status)};
   margin-top: 10px;
 `;
 
-const LeftContainer = styled.View`
-  flex: 1;
-  padding: 10px;
-`;
-
-const RightContainer = styled.View`
+const ColumnContainer = styled.View`
   flex: 1;
   padding: 10px;
 `;
@@ -40,13 +36,13 @@ const Title = styled.Text`
   font-size: 16px;
 `;
 
+const TitleWithMargin = styled(Title)`
+  margin-top: 10px;
+`;
+
 const Content = styled.Text`
   color: black;
   font-size: 16px;
-`;
-
-const ArrhythmiaText = styled.Text`
-  color: black;
 `;
 
 interface CardProps {
@@ -56,24 +52,35 @@ interface CardProps {
 
 export const CardListItem: React.FC<CardProps> = ({card, onCardPressed}) => {
   const date = new Date(card.created_date);
-  console.log(card);
+
+  const getButtonText = (status: Status) => {
+    switch (status) {
+      case 'DONE':
+        return 'Reject';
+      default:
+        return 'Done';
+    }
+  };
+
   return (
-    <CardContainer
-      key={card.id}
-      status={card.status}
-      onPress={() => onCardPressed?.(card.id)}>
-      <LeftContainer>
+    <CardContainer status={card.status} key={card.id}>
+      <ColumnContainer>
         <Title>Patient</Title>
         <Content>{card.patient_name}</Content>
-        <Title>Date</Title>
+        <TitleWithMargin>Date</TitleWithMargin>
         <Content>{date.toLocaleDateString()}</Content>
-      </LeftContainer>
-      <RightContainer>
+      </ColumnContainer>
+      <ColumnContainer>
         <Title>Arrhytmias</Title>
-        {card.arrhythmias.map(arrhythmia => (
-          <Content>{arrhythmia}</Content>
+        {card.arrhythmias.map((arrhythmia, index) => (
+          <Content key={index}>{arrhythmia}</Content>
         ))}
-      </RightContainer>
+      </ColumnContainer>
+      <ColumnContainer>
+        <Button onPress={() => onCardPressed?.(card.id)}>
+          {getButtonText(card.status)}
+        </Button>
+      </ColumnContainer>
     </CardContainer>
   );
 };

@@ -1,6 +1,6 @@
+import {Status} from '@api';
 import {Button} from '@components';
 import React, {useEffect, useState} from 'react';
-import {Status} from 'src/api/types';
 import styled from 'styled-components/native';
 
 const StatusFilterContainer = styled.View`
@@ -28,10 +28,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
   }, [onFilterChange, activeFilter]);
 
   const onPress = (status: Status) => {
-    console.log('STATUS', status);
-    console.log('ACTIVE FILTER BEFORE', activeFilter);
     setActiveFilter(status === activeFilter ? undefined : status);
-    console.log('ACTIVE FILTER AFTER', activeFilter);
   };
   return (
     <StatusFilterContainer>
