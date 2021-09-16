@@ -6,7 +6,7 @@ This project is my answer to the Cardiolog's Technical Test
 
 <p align="center" >
   <kbd>
-    <img src="images/apercu.gif" title="Cardiologs Demo" float="left">
+    <img src="images/preview.gif" title="Cardiologs Demo" float="left">
   </kbd>
   <br>
   <em>Cardiologs Technical Test</em>
