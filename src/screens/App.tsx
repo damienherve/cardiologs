@@ -16,7 +16,7 @@ import styled from 'styled-components/native';
 
 const CardList = styled(FlatList as new () => FlatList<Card>)``;
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [cards, setCards] = useState<Array<Card>>([]);
   const [searchFilter, setSearchFilter] = useState<string | undefined>();
   const [activeStatusFilter, setActiveStatusFilter] = useState<
@@ -104,5 +104,3 @@ const App: React.FC = () => {
     </Layout>
   );
 };
-
-export default App;
